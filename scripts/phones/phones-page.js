@@ -1,5 +1,6 @@
 import PhoneCatalog from './components/phone-catalog.js';
 import PhoneViewer from './components/phone-viewer.js';
+import Sidebar from './components/sidebar.js';
 import PhoneService from './services/phone-service.js';
 
 export default class PhonesPage {
@@ -12,6 +13,8 @@ export default class PhonesPage {
       element: this._element.querySelector('[data-component="phone-catalog"]'),
       phones: PhoneService.getPhones(),
     });
+
+    console.log(phones);
 
     this._catalogue.on('phone-selected', (event) => {
       let phoneId = event.detail;
@@ -26,35 +29,32 @@ export default class PhonesPage {
     this._viewer = new PhoneViewer({
       element: this._element.querySelector('[data-component="phone-viewer"]'),
     });
+
+    this._sidebar = new Sidebar({
+      element: this._element.querySelector('[data-component="phone-sidebar"]'),
+    });
+
+    this._checkingSearchValue();
+
+    // скрываем вьюху телефона по нажатию на back
+
+    this._viewer.on('click', '.btn_back', () => {
+      this._viewer.hide();
+      this._catalogue.show();
+    });
   }
+
+  // _checkingSearchValue() {
+  //   this._sidebar.on('search-input-check', (event) => {
+  //     if ()
+  //   })
+  // }
 
   _render() {
     this._element.innerHTML = `
       <!--Sidebar-->
       <div class="col-md-2">
-        <section>
-          <p>
-            Search:
-            <input>
-          </p>
-  
-          <p>
-            Sort by:
-            <select>
-              <option value="name">Alphabetical</option>
-              <option value="age">Newest</option>
-            </select>
-          </p>
-        </section>
-  
-        <section>
-          <p>Shopping Cart</p>
-          <ul>
-            <li>Phone 1</li>
-            <li>Phone 2</li>
-            <li>Phone 3</li>
-          </ul>
-        </section>
+        <div data-component="phone-sidebar"></div>
       </div>
   
       <!--Main content-->
