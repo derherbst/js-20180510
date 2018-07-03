@@ -16,13 +16,7 @@ export default class PhonesPage {
     });
 
     this._catalogue.on('phone-selected', (event) => {
-      let phoneId = event.detail;
-      let phoneDetails = PhoneService.getPhone(phoneId);
-
-      this._catalogue.hide();
-      this._viewer.showPhone(phoneDetails);
-
-      console.log(phoneId);
+      this._handlePhoneSelection(event);
     });
 
     this._viewer = new PhoneViewer({
@@ -44,15 +38,22 @@ export default class PhonesPage {
     });
   }
 
+  _handlePhoneSelection(event) {
+    let phoneId = event.detail;
+    let phoneDetails = PhoneService.getPhone(phoneId);
+    this._catalogue.hide();
+    this._viewer.showPhone(phoneDetails);
+  }
+
   _checkingSearchValue() {
     this._sidebar.on('search-input-check', (event) => {
       let inputVal = event.detail;
-      this._phones = this._phones.filter((phone) => {
+      this._sortedPhones = this._phones.filter((phone) => {
         if (phone.name.startsWith(inputVal)) {
           return phone;
         }
       });
-      this._catalogue._phones = this._phones;
+      this._catalogue._phones = this._sortedPhones;
       this._catalogue._render();
     })
   }
