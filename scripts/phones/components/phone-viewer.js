@@ -4,6 +4,10 @@ export default class PhoneViewer extends Component {
 
   constructor( {element} ) {
     super( {element} );
+
+    this.on('click', '[data-element="back-button"]', () => {
+      this.trigger('back');
+    });
   }
 
   showPhone(phoneDetails) {
@@ -16,7 +20,7 @@ export default class PhoneViewer extends Component {
     this._element.innerHTML = `
       <img class="phone" src="${phone.images[0]}">
 
-      <button class="btn_back">Back</button>
+      <button class="btn_back" data-element="back-button">Back</button>
       <button class="btn_add">Add to basket</button>
   
   

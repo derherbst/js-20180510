@@ -6,6 +6,7 @@ import PhoneService from './services/phone-service.js';
 export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
+    this._phones = PhoneService.getPhones();
 
     this._render();
 
@@ -13,8 +14,6 @@ export default class PhonesPage {
       element: this._element.querySelector('[data-component="phone-catalog"]'),
       phones: PhoneService.getPhones(),
     });
-
-    console.log(phones);
 
     this._catalogue.on('phone-selected', (event) => {
       let phoneId = event.detail;
@@ -35,20 +34,58 @@ export default class PhonesPage {
     });
 
     this._checkingSearchValue();
+    this._checkingSelectValue();
 
     // скрываем вьюху телефона по нажатию на back
 
-    this._viewer.on('click', '.btn_back', () => {
+    this._viewer.on('back', () => {
       this._viewer.hide();
       this._catalogue.show();
     });
   }
 
-  // _checkingSearchValue() {
-  //   this._sidebar.on('search-input-check', (event) => {
-  //     if ()
-  //   })
-  // }
+  _checkingSearchValue() {
+    this._sidebar.on('search-input-check', (event) => {
+      let inputVal = event.detail;
+      this._phones = this._phones.filter((phone) => {
+        if (phone.name.startsWith(inputVal)) {
+          return phone;
+        }
+      });
+      this._catalogue._phones = this._phones;
+      this._catalogue._render();
+    })
+  }
+
+  _checkingSelectValue() {
+    this._sidebar.on('select-check', (event) => {
+      let selectVal = event.detail;
+      if (selectVal.value === 'name') {
+
+        this._phones = this._phones.sort((a, b) => {
+
+          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+          return 0;
+
+        });
+
+        this._catalogue._render();
+      }
+
+      if (selectVal.value === 'age') {
+        this._phones = this._phones.sort((a, b) => {
+
+          if (a.age < b.age) return -1;
+          if (a.age > b.age) return 1;
+          return 0;
+
+        });
+
+        this._catalogue._render();
+      }
+    })
+  }
 
   _render() {
     this._element.innerHTML = `

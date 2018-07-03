@@ -11,17 +11,23 @@ export default class Sidebar extends Component {
 
     // this._sortPhonesBySearch();
 
-    this.on('keyup', '[data-element="search"]', (event) => {
+    this.on('input', '[data-element="search"]', (event) => {
       this._sortPhonesBySearch();
     });
 
+    this.on('change', '[data-element="search"]', () => {
+      this._sortPhonesBySelect();
+    })
+
+  }
+
+  _sortPhonesBySelect() {
+    let selectElement = event.delegateTarget;
+    this.trigger('select-check', selectElement.value);
   }
 
   _sortPhonesBySearch() {
     let searchElement = event.delegateTarget;
-
-    console.log(searchElement.value);
-
     this.trigger('search-input-check', searchElement.value);
   }
 
@@ -35,7 +41,7 @@ export default class Sidebar extends Component {
 
         <p>
           Sort by:
-          <select>
+          <select data-element="select">
             <option value="name">Alphabetical</option>
             <option value="age">Newest</option>
           </select>
