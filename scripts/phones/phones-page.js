@@ -1,5 +1,6 @@
 import PhoneCatalog from './components/phone-catalog.js';
 import PhoneViewer from './components/phone-viewer.js';
+import ShoppingCart from './components/shopping-cart.js';
 import Sidebar from './components/sidebar.js';
 import PhoneService from './services/phone-service.js';
 
@@ -10,39 +11,67 @@ export default class PhonesPage {
 
     this._render();
 
+    this._initCatalog();
+    this._initViewer();
+    this._sidebar();
+    this._initShoppingCart();
+
+    this._checkingSearchValue();
+    this._checkingSelectValue();
+  }
+
+  _initCatalog() {
     this._catalogue = new PhoneCatalog({
       element: this._element.querySelector('[data-component="phone-catalog"]'),
       phones: PhoneService.getPhones(),
     });
 
     this._catalogue.on('phone-selected', (event) => {
-      this._handlePhoneSelection(event);
+      let phoneId = event.detail;
+      let phoneDetails = PhoneService.getPhone(phoneId);
+
+      this._catalogue.hide();
+      this._viewer.showPhone(phoneDetails);
     });
 
+    this._catalogue.on('add', (event) => {
+      let phoneDetails = {
+        image: event.detail.phoneImg,
+        id: event.detail.phoneId,
+      };
+      this._shoppingCart.addItem(phoneDetails);
+    });
+  }
+
+  _initViewer() {
     this._viewer = new PhoneViewer({
       element: this._element.querySelector('[data-component="phone-viewer"]'),
     });
-
-    this._sidebar = new Sidebar({
-      element: this._element.querySelector('[data-component="phone-sidebar"]'),
-    });
-
-    this._checkingSearchValue();
-    this._checkingSelectValue();
-
-    // скрываем вьюху телефона по нажатию на back
 
     this._viewer.on('back', () => {
       this._viewer.hide();
       this._catalogue.show();
     });
+
+    this._viewer.on('add', () => {
+      let phoneDetails = {
+        image: event.detail.phoneImg,
+        id: event.detail.phoneId,
+      };
+      this._shoppingCart.addItem(phoneDetails);
+    });
   }
 
-  _handlePhoneSelection(event) {
-    let phoneId = event.detail;
-    let phoneDetails = PhoneService.getPhone(phoneId);
-    this._catalogue.hide();
-    this._viewer.showPhone(phoneDetails);
+  _sidebar() {
+    this._sidebar = new Sidebar({
+      element: this._element.querySelector('[data-component="phone-sidebar"]'),
+    });
+  }
+
+  _initShoppingCart() {
+    this._shoppingCart = new ShoppingCart({
+      element: this._element.querySelector('[data-component="shopping-cart"]'),
+    });
   }
 
   _checkingSearchValue() {
@@ -93,6 +122,7 @@ export default class PhonesPage {
       <!--Sidebar-->
       <div class="col-md-2">
         <div data-component="phone-sidebar"></div>
+        <div data-component="shopping-cart"></div>
       </div>
   
       <!--Main content-->

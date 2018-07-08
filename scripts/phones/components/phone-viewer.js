@@ -9,12 +9,13 @@ export default class PhoneViewer extends Component {
       this.trigger('back');
     });
 
-    this.on('click', 'data-element="add-button"', () => {
-      this.trigger('add', this._phone.id);
+    this.on('click', '[data-element="add-button"]', (event) => {
+      this.trigger('add', { phoneId: this._phone.id, phoneImg: this._phone.images[0] });
     });
   }
 
   showPhone(phoneDetails) {
+    this._phone = phoneDetails;
     this._render(phoneDetails);
     this.show();
   }

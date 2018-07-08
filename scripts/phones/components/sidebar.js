@@ -47,15 +47,6 @@ export default class Sidebar extends Component {
           </select>
         </p>
       </section>
-
-      <section>
-        <p>Shopping Cart</p>
-        <ul>
-          <li>Phone 1</li>
-          <li>Phone 2</li>
-          <li>Phone 3</li>
-        </ul>
-      </section>
     `;
   }
 }

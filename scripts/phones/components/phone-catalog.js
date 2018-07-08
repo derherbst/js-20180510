@@ -11,6 +11,13 @@ export default class PhoneCatalog extends Component {
     this.on('click', '[data-element="details-link"]', (event) => {
       this._onPhoneClick(event);
     });
+
+    this.on('click', '[data-element="add-button"]', (event) => {
+      let phoneElement = event.delegateTarget.closest('[data-element="phone"]');
+      this.trigger('add', { phoneId: phoneElement.dataset.phoneId, phoneImg: phoneElement.dataset.phoneImg });
+      // console.log(phoneElement.dataset);
+    });
+
   }
 
   _onPhoneClick(event) {
@@ -26,7 +33,8 @@ export default class PhoneCatalog extends Component {
           
           <li class="thumbnail"
               data-element="phone"
-              data-phone-id="${ phone.id }">
+              data-phone-id="${ phone.id }"
+              data-phone-img="${ phone.imageUrl }">
               
             <a href="#!/phones/${ phone.id }" class="thumb">
               <img
@@ -37,7 +45,7 @@ export default class PhoneCatalog extends Component {
             </a>
   
             <div class="phones__btn-buy-wrapper">
-              <a class="btn btn-success">
+              <a class="btn btn-success" data-element="add-button">
                 Add
               </a>
             </div>
