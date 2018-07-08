@@ -16,8 +16,8 @@ export default class PhonesPage {
     this._sidebar();
     this._initShoppingCart();
 
-    this._checkingSearchValue();
-    this._checkingSelectValue();
+    // this._checkingSearchValue();
+    // this._checkingSelectValue();
   }
 
   _initCatalog() {
@@ -66,6 +66,16 @@ export default class PhonesPage {
     this._sidebar = new Sidebar({
       element: this._element.querySelector('[data-component="phone-sidebar"]'),
     });
+
+    this._sidebar.on('sort', (event) => {
+      let sortedPhones = PhoneService.getPhones({ order: event.detail });
+      console.log(event.detail);
+      this._catalogue.showPhones(sortedPhones);
+    });
+
+    this._sidebar.on('search', (event) => {
+      console.log(data);
+    });
   }
 
   _initShoppingCart() {
@@ -74,48 +84,48 @@ export default class PhonesPage {
     });
   }
 
-  _checkingSearchValue() {
-    this._sidebar.on('search-input-check', (event) => {
-      let inputVal = event.detail;
-      this._sortedPhones = this._phones.filter((phone) => {
-        if (phone.name.startsWith(inputVal)) {
-          return phone;
-        }
-      });
-      this._catalogue._phones = this._sortedPhones;
-      this._catalogue._render();
-    })
-  }
+  // _checkingSearchValue() {
+  //   this._sidebar.on('search-input-check', (event) => {
+  //     let inputVal = event.detail;
+  //     this._sortedPhones = this._phones.filter((phone) => {
+  //       if (phone.name.startsWith(inputVal)) {
+  //         return phone;
+  //       }
+  //     });
+  //     this._catalogue._phones = this._sortedPhones;
+  //     this._catalogue._render();
+  //   })
+  // }
 
-  _checkingSelectValue() {
-    this._sidebar.on('select-check', (event) => {
-      let selectVal = event.detail;
-      if (selectVal.value === 'name') {
-
-        this._phones = this._phones.sort((a, b) => {
-
-          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
-          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-          return 0;
-
-        });
-
-        this._catalogue._render();
-      }
-
-      if (selectVal.value === 'age') {
-        this._phones = this._phones.sort((a, b) => {
-
-          if (a.age < b.age) return -1;
-          if (a.age > b.age) return 1;
-          return 0;
-
-        });
-
-        this._catalogue._render();
-      }
-    })
-  }
+  // _checkingSelectValue() {
+  //   this._sidebar.on('select-check', (event) => {
+  //     let selectVal = event.detail;
+  //     if (selectVal.value === 'name') {
+  //
+  //       this._phones = this._phones.sort((a, b) => {
+  //
+  //         if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+  //         if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+  //         return 0;
+  //
+  //       });
+  //
+  //       this._catalogue._render();
+  //     }
+  //
+  //     if (selectVal.value === 'age') {
+  //       this._phones = this._phones.sort((a, b) => {
+  //
+  //         if (a.age < b.age) return -1;
+  //         if (a.age > b.age) return 1;
+  //         return 0;
+  //
+  //       });
+  //
+  //       this._catalogue._render();
+  //     }
+  //   })
+  // }
 
   _render() {
     this._element.innerHTML = `

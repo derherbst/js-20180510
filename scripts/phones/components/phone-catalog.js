@@ -26,6 +26,11 @@ export default class PhoneCatalog extends Component {
     this.trigger('phone-selected', phoneElement.dataset.phoneId);
   }
 
+  showPhones(phones) {
+    this._phones = phones;
+    this._render();
+  }
+
   _render() {
     this._element.innerHTML = `
       <ul class="phones">
